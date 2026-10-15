@@ -1,0 +1,700 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Stellantis | Observaciones de Estanterías</title>
+
+<style>
+:root {
+    --azul: #123b69;
+    --azul2: #0757a6;
+    --fondo: #f1f4f8;
+    --borde: #dce3ec;
+    --texto: #172536;
+}
+* { box-sizing: border-box; }
+
+body {
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    background: var(--fondo);
+    color: var(--texto);
+}
+header {
+    background: linear-gradient(120deg, #102b4e, #145c9f);
+    color: white;
+    padding: 23px 5%;
+    border-bottom: 5px solid #1689cf;
+}
+.marca {
+    font-size: 27px;
+    font-weight: 800;
+    letter-spacing: 2px;
+}
+header p { margin: 7px 0 0; color: #e0edfa; }
+main { max-width: 1250px; margin: 25px auto; padding: 0 16px; }
+h2 { margin-top: 0; font-size: 21px; }
+.panel {
+    background: white;
+    border: 1px solid var(--borde);
+    border-radius: 12px;
+    padding: 22px;
+    margin-bottom: 20px;
+    box-shadow: 0 3px 12px #17253608;
+}
+.grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+}
+.campo { display: flex; flex-direction: column; gap: 7px; }
+.campo.completo { grid-column: 1 / -1; }
+label { font-weight: 700; font-size: 14px; }
+input, textarea, select {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #cbd5e1;
+    border-radius: 7px;
+    font: inherit;
+    background: white;
+}
+textarea { min-height: 110px; resize: vertical; }
+input:focus, textarea:focus, select:focus {
+    outline: 2px solid #9ac9f5;
+    border-color: var(--azul2);
+}
+button {
+    padding: 11px 15px;
+    border: 0;
+    border-radius: 7px;
+    cursor: pointer;
+    font-weight: 700;
+    font-size: 14px;
+}
+button:disabled { opacity: .55; cursor: wait; }
+.primario { background: var(--azul2); color: white; }
+.secundario { background: #e8eef6; color: #173b62; }
+.guardar { margin-top: 18px; width: 100%; padding: 14px; }
+.filtros {
+    display: grid;
+    grid-template-columns: 2fr 1fr auto;
+    gap: 10px;
+    margin-bottom: 16px;
+}
+.tarjetas {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px;
+    margin-bottom: 20px;
+}
+.tarjeta {
+    background: white;
+    border: 1px solid var(--borde);
+    border-radius: 10px;
+    padding: 16px;
+}
+.numero { font-size: 27px; font-weight: 800; margin-top: 6px; }
+.pequeno { color: #637083; font-size: 13px; }
+.registro {
+    border: 1px solid var(--borde);
+    border-radius: 10px;
+    padding: 16px;
+    margin-bottom: 12px;
+    background: white;
+}
+.registro-cabecera {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+.local { font-size: 18px; font-weight: 800; overflow-wrap: anywhere; }
+.fecha { color: #64748b; font-size: 12px; margin-top: 5px; }
+.descripcion {
+    margin: 15px 0;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+}
+.foto {
+    display: block;
+    max-width: 100%;
+    max-height: 330px;
+    border-radius: 8px;
+    margin: 10px 0;
+    object-fit: contain;
+    background: #eef2f6;
+}
+.estado {
+    display: inline-block;
+    padding: 6px 9px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 700;
+}
+.Pendiente { background: #fff0c2; color: #815500; }
+.En-reparación { background: #dcecff; color: #124e91; }
+.Solucionada { background: #d8f5e1; color: #176437; }
+.acciones {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 14px;
+}
+.acciones select { max-width: 210px; }
+.mensaje {
+    padding: 12px;
+    border-radius: 7px;
+    margin: 12px 0;
+    display: none;
+    overflow-wrap: anywhere;
+}
+.ok { background: #dcfce7; color: #166534; }
+.error { background: #fee2e2; color: #991b1b; }
+.vacio { text-align: center; padding: 28px; color: #64748b; }
+.nota { font-size: 12px; color: #64748b; line-height: 1.5; }
+footer { text-align: center; color: #728096; padding: 20px; font-size: 12px; }
+
+@media (max-width: 650px) {
+    .grid, .tarjetas { grid-template-columns: 1fr; }
+    .filtros { grid-template-columns: 1fr; }
+    .panel { padding: 16px; }
+    .marca { font-size: 23px; }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <div class="marca">STELLANTIS</div>
+    <p>Sistema de observaciones de estanterías</p>
+</header>
+
+<main>
+    <div class="tarjetas">
+        <div class="tarjeta">
+            <div class="pequeno">Total de observaciones</div>
+            <div class="numero" id="total">0</div>
+        </div>
+        <div class="tarjeta">
+            <div class="pequeno">Pendientes</div>
+            <div class="numero" id="pendientes">0</div>
+        </div>
+        <div class="tarjeta">
+            <div class="pequeno">En reparación</div>
+            <div class="numero" id="reparacion">0</div>
+        </div>
+    </div>
+
+    <section class="panel">
+        <h2>Registrar una observación</h2>
+        <p class="pequeno">
+            Informá cualquier golpe, deformación o daño detectado
+            en una estantería.
+        </p>
+
+        <form id="formulario">
+            <div class="grid">
+                <div class="campo">
+                    <label for="local">LOCAL / ubicación *</label>
+                    <input id="local" maxlength="100"
+                           placeholder="Ej.: EFB.C.01.05.2" required>
+                </div>
+
+                <div class="campo">
+                    <label for="foto">Fotografía del daño</label>
+                    <input id="foto" type="file"
+                           accept="image/jpeg,image/png,image/webp">
+                    <span class="nota">
+                        Opcional. Formatos JPG, PNG o WEBP. Máximo 5 MB.
+                    </span>
+                </div>
+
+                <div class="campo completo">
+                    <label for="descripcion">Descripción de la observación *</label>
+                    <textarea id="descripcion" maxlength="3000"
+                              placeholder="Describí el golpe, la zona afectada y cualquier detalle útil..."
+                              required></textarea>
+                </div>
+            </div>
+
+            <div id="mensajeFormulario" class="mensaje"></div>
+
+            <button class="primario guardar" id="btnGuardar" type="submit">
+                Registrar observación
+            </button>
+        </form>
+    </section>
+
+    <section class="panel">
+        <h2>Observaciones registradas</h2>
+
+        <div class="filtros">
+            <input id="buscar" placeholder="Buscar por LOCAL o descripción...">
+            <select id="filtroEstado">
+                <option value="">Todos los estados</option>
+                <option value="Pendiente">Pendiente</option>
+                <option value="En reparación">En reparación</option>
+                <option value="Solucionada">Solucionada</option>
+            </select>
+            <button class="secundario" id="btnActualizar" type="button">
+                Actualizar
+            </button>
+        </div>
+
+        <p class="nota">
+            El historial conserva las observaciones registradas, incluso
+            cuando se marcan como solucionadas.
+        </p>
+
+        <div id="mensajeListado" class="mensaje"></div>
+        <div id="listado">
+            <div class="vacio">Cargando observaciones...</div>
+        </div>
+    </section>
+</main>
+
+<footer>
+    Stellantis · Registro y seguimiento de daños en estanterías
+</footer>
+
+<script>
+"use strict";
+
+// ==============================================
+// CONFIGURACIÓN DE SUPABASE
+// ==============================================
+
+const SUPABASE_URL = "https://zjimmzyyiwbolufaxvwr.supabase.co";
+
+const SUPABASE_KEY =
+    "sb_publishable_kme-T9tkl1DdfBIVoNl-OA_0LTR23Cs";
+
+const TABLA = "observaciones_estanterias";
+const BUCKET = "fotos-estanterias";
+const MAX_FOTO = 5 * 1024 * 1024;
+
+const headersBase = {
+    "apikey": SUPABASE_KEY,
+    "Authorization": "Bearer " + SUPABASE_KEY
+};
+
+let observaciones = [];
+let cargando = false;
+
+// ==============================================
+// UTILIDADES
+// ==============================================
+
+function mostrarMensaje(id, texto, tipo) {
+    const elemento = document.getElementById(id);
+    elemento.textContent = texto;
+    elemento.className = "mensaje " + tipo;
+    elemento.style.display = "block";
+}
+
+function ocultarMensaje(id) {
+    const elemento = document.getElementById(id);
+    elemento.style.display = "none";
+    elemento.textContent = "";
+}
+
+async function leerRespuesta(respuesta) {
+    const texto = await respuesta.text();
+
+    if (!respuesta.ok) {
+        let detalle = texto;
+        try {
+            const json = JSON.parse(texto);
+            detalle = json.message || json.error || texto;
+        } catch (_) {}
+
+        throw new Error("Supabase HTTP " + respuesta.status + ": " + detalle);
+    }
+
+    if (!texto) return null;
+
+    try {
+        return JSON.parse(texto);
+    } catch (_) {
+        return texto;
+    }
+}
+
+function escapar(texto) {
+    return String(texto ?? "").replace(/[&<>"']/g, letra => ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#39;"
+    })[letra]);
+}
+
+function fechaLegible(fecha) {
+    if (!fecha) return "Fecha no disponible";
+
+    const valor = new Date(fecha);
+    if (Number.isNaN(valor.getTime())) return "Fecha no disponible";
+
+    return valor.toLocaleString("es-AR", {
+        dateStyle: "short",
+        timeStyle: "short"
+    });
+}
+
+function claseEstado(estado) {
+    return estado.replaceAll(" ", "-");
+}
+
+function normalizarRuta(ruta) {
+    return ruta.split("/").map(encodeURIComponent).join("/");
+}
+
+// ==============================================
+// FOTOGRAFÍAS EN BUCKET PRIVADO
+// ==============================================
+
+async function subirFoto(archivo) {
+    if (!archivo) return null;
+
+    if (!["image/jpeg", "image/png", "image/webp"].includes(archivo.type)) {
+        throw new Error("La foto debe ser JPG, PNG o WEBP.");
+    }
+
+    if (archivo.size > MAX_FOTO) {
+        throw new Error("La foto supera el límite de 5 MB.");
+    }
+
+    const extension = ({
+        "image/jpeg": "jpg",
+        "image/png": "png",
+        "image/webp": "webp"
+    })[archivo.type];
+
+    const ruta = "observaciones/" +
+        new Date().toISOString().replace(/[:.]/g, "-") + "-" +
+        crypto.randomUUID() + "." + extension;
+
+    const url = SUPABASE_URL + "/storage/v1/object/" +
+        BUCKET + "/" + normalizarRuta(ruta);
+
+    const respuesta = await fetch(url, {
+        method: "POST",
+        headers: {
+            ...headersBase,
+            "Content-Type": archivo.type,
+            "x-upsert": "false"
+        },
+        body: archivo
+    });
+
+    await leerRespuesta(respuesta);
+    return ruta;
+}
+
+async function obtenerUrlFoto(ruta) {
+    if (!ruta) return null;
+
+    const url = SUPABASE_URL + "/storage/v1/object/sign/" +
+        BUCKET + "/" + normalizarRuta(ruta);
+
+    const respuesta = await fetch(url, {
+        method: "POST",
+        headers: {
+            ...headersBase,
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ expiresIn: 3600 })
+    });
+
+    const datos = await leerRespuesta(respuesta);
+
+    if (!datos || !datos.signedURL) {
+        throw new Error("No se pudo generar el enlace de la fotografía.");
+    }
+
+    if (datos.signedURL.startsWith("http")) {
+        return datos.signedURL;
+    }
+
+    return SUPABASE_URL + "/storage/v1" + datos.signedURL;
+}
+
+// ==============================================
+// REGISTRAR OBSERVACIÓN
+// ==============================================
+
+document.getElementById("formulario").addEventListener("submit",
+    async function(evento) {
+        evento.preventDefault();
+
+        if (cargando) return;
+
+        const local = document.getElementById("local").value.trim();
+        const descripcion = document.getElementById("descripcion").value.trim();
+        const archivo = document.getElementById("foto").files[0];
+        const boton = document.getElementById("btnGuardar");
+
+        if (!local || !descripcion) {
+            mostrarMensaje("mensajeFormulario",
+                "Completá el LOCAL y la descripción.", "error");
+            return;
+        }
+
+        if (archivo && archivo.size > MAX_FOTO) {
+            mostrarMensaje("mensajeFormulario",
+                "La foto supera el límite de 5 MB.", "error");
+            return;
+        }
+
+        cargando = true;
+        boton.disabled = true;
+        boton.textContent = "Guardando...";
+        ocultarMensaje("mensajeFormulario");
+
+        try {
+            let fotoRuta = null;
+
+            if (archivo) {
+                mostrarMensaje("mensajeFormulario",
+                    "Subiendo fotografía...", "ok");
+                fotoRuta = await subirFoto(archivo);
+            }
+
+            const respuesta = await fetch(
+                SUPABASE_URL + "/rest/v1/" + TABLA,
+                {
+                    method: "POST",
+                    headers: {
+                        ...headersBase,
+                        "Content-Type": "application/json",
+                        "Prefer": "return=representation"
+                    },
+                    body: JSON.stringify({
+                        local: local,
+                        descripcion: descripcion,
+                        foto_url: fotoRuta,
+                        estado: "Pendiente"
+                    })
+                }
+            );
+
+            await leerRespuesta(respuesta);
+
+            document.getElementById("formulario").reset();
+
+            mostrarMensaje("mensajeFormulario",
+                "Observación registrada correctamente.", "ok");
+
+            await cargarObservaciones();
+
+        } catch (error) {
+            console.error(error);
+            mostrarMensaje("mensajeFormulario",
+                "No se pudo guardar. " + error.message, "error");
+        } finally {
+            cargando = false;
+            boton.disabled = false;
+            boton.textContent = "Registrar observación";
+        }
+    }
+);
+
+// ==============================================
+// CONSULTAR HISTORIAL
+// ==============================================
+
+async function cargarObservaciones() {
+    const contenedor = document.getElementById("listado");
+
+    contenedor.innerHTML =
+        '<div class="vacio">Consultando la base de datos...</div>';
+
+    ocultarMensaje("mensajeListado");
+
+    try {
+        const url = SUPABASE_URL + "/rest/v1/" + TABLA +
+            "?select=id,local,descripcion,foto_url,estado,fecha_creacion,fecha_actualizacion" +
+            "&order=fecha_creacion.desc&limit=500";
+
+        const respuesta = await fetch(url, {
+            headers: headersBase
+        });
+
+        observaciones = await leerRespuesta(respuesta) || [];
+
+        document.getElementById("total").textContent =
+            observaciones.length;
+
+        document.getElementById("pendientes").textContent =
+            observaciones.filter(o => o.estado === "Pendiente").length;
+
+        document.getElementById("reparacion").textContent =
+            observaciones.filter(o => o.estado === "En reparación").length;
+
+        await renderizarListado();
+
+    } catch (error) {
+        console.error(error);
+        contenedor.innerHTML = "";
+
+        mostrarMensaje("mensajeListado",
+            "No se pudieron cargar los datos. " + error.message, "error");
+    }
+}
+
+// ==============================================
+// MOSTRAR RESULTADOS Y FILTROS
+// ==============================================
+
+async function renderizarListado() {
+    const contenedor = document.getElementById("listado");
+    const busqueda = document.getElementById("buscar").value
+        .trim().toLocaleLowerCase("es-AR");
+
+    const estadoElegido = document.getElementById("filtroEstado").value;
+
+    const resultados = observaciones.filter(o => {
+        const coincideTexto =
+            String(o.local || "").toLocaleLowerCase("es-AR").includes(busqueda) ||
+            String(o.descripcion || "").toLocaleLowerCase("es-AR").includes(busqueda);
+
+        const coincideEstado = !estadoElegido || o.estado === estadoElegido;
+
+        return coincideTexto && coincideEstado;
+    });
+
+    contenedor.innerHTML = "";
+
+    if (!resultados.length) {
+        contenedor.innerHTML =
+            '<div class="vacio">No hay observaciones que coincidan con la búsqueda.</div>';
+        return;
+    }
+
+    for (const o of resultados) {
+        const articulo = document.createElement("article");
+        articulo.className = "registro";
+
+        articulo.innerHTML = `
+            <div class="registro-cabecera">
+                <div>
+                    <div class="local">LOCAL: ${escapar(o.local)}</div>
+                    <div class="fecha">
+                        Registrada: ${escapar(fechaLegible(o.fecha_creacion))}
+                    </div>
+                    ${o.fecha_actualizacion &&
+                      o.fecha_actualizacion !== o.fecha_creacion ? `
+                        <div class="fecha">
+                            Actualizada: ${escapar(fechaLegible(o.fecha_actualizacion))}
+                        </div>
+                    ` : ""}
+                </div>
+                <span class="estado ${claseEstado(escapar(o.estado))}">
+                    ${escapar(o.estado)}
+                </span>
+            </div>
+
+            <div class="descripcion">${escapar(o.descripcion)}</div>
+
+            <div class="zona-foto"></div>
+
+            <div class="acciones">
+                <label for="estado-${o.id}">Cambiar estado:</label>
+                <select id="estado-${o.id}">
+                    <option value="Pendiente" ${o.estado === "Pendiente" ? "selected" : ""}>Pendiente</option>
+                    <option value="En reparación" ${o.estado === "En reparación" ? "selected" : ""}>En reparación</option>
+                    <option value="Solucionada" ${o.estado === "Solucionada" ? "selected" : ""}>Solucionada</option>
+                </select>
+                <button class="primario btn-estado">Guardar estado</button>
+            </div>
+        `;
+
+        const botonEstado = articulo.querySelector(".btn-estado");
+
+        botonEstado.addEventListener("click", async () => {
+            const nuevoEstado = articulo.querySelector("select").value;
+            botonEstado.disabled = true;
+            botonEstado.textContent = "Guardando...";
+
+            try {
+                const respuesta = await fetch(
+                    SUPABASE_URL + "/rest/v1/" + TABLA + "?id=eq." +
+                    encodeURIComponent(o.id),
+                    {
+                        method: "PATCH",
+                        headers: {
+                            ...headersBase,
+                            "Content-Type": "application/json",
+                            "Prefer": "return=minimal"
+                        },
+                        body: JSON.stringify({
+                            estado: nuevoEstado,
+                            fecha_actualizacion: new Date().toISOString()
+                        })
+                    }
+                );
+
+                await leerRespuesta(respuesta);
+                await cargarObservaciones();
+
+            } catch (error) {
+                console.error(error);
+                alert("No se pudo actualizar el estado: " + error.message);
+                botonEstado.disabled = false;
+                botonEstado.textContent = "Guardar estado";
+            }
+        });
+
+        contenedor.appendChild(articulo);
+
+        if (o.foto_url) {
+            const zonaFoto = articulo.querySelector(".zona-foto");
+            zonaFoto.textContent = "Cargando fotografía...";
+
+            try {
+                const urlFoto = await obtenerUrlFoto(o.foto_url);
+                const imagen = document.createElement("img");
+
+                imagen.src = urlFoto;
+                imagen.alt = "Fotografía del daño en " + o.local;
+                imagen.className = "foto";
+                imagen.loading = "lazy";
+
+                zonaFoto.textContent = "";
+                zonaFoto.appendChild(imagen);
+            } catch (error) {
+                console.error(error);
+                zonaFoto.textContent =
+                    "No se pudo cargar la fotografía.";
+            }
+        }
+    }
+}
+
+// ==============================================
+// EVENTOS
+// ==============================================
+
+document.getElementById("buscar").addEventListener("input", () => {
+    renderizarListado();
+});
+
+document.getElementById("filtroEstado").addEventListener("change", () => {
+    renderizarListado();
+});
+
+document.getElementById("btnActualizar").addEventListener("click", () => {
+    cargarObservaciones();
+});
+
+// Primera carga
+cargarObservaciones();
+</script>
+</body>
+</html>
